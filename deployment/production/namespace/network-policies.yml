@@ -1,0 +1,24 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-traefik-port-3000
+  namespace: hirefit-website
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          role: ingress
+      podSelector:
+        matchLabels:
+          role: traefik-ingress
+    ports:
+    - port: 3000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      port: "3000"
+      traefik: enabled
+  policyTypes:
+  - Ingress

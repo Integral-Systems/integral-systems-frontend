@@ -1,0 +1,139 @@
+# kubetpl:syntax:go-template
+---
+kind: pipeline
+type: kubernetes
+name: Beta-Pipeline
+
+steps:
+{{ if (.ENABLE_SUBMODULE) "true" }}
+- name: Clone-Submodules
+  image: alpine/git
+  commands:
+  - git submodule init
+  - git submodule update --recursive --remote
+{{ end }}
+- name: Build-${DRONE_TAG}
+  image: plugins/docker
+  settings:
+    mtu: 1450
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: {{.BASE_IMAGE}}
+    registry: registry.integral-systems.ch
+    tags: ${DRONE_TAG}
+    build_args:
+    - TAG=${DRONE_TAG}
+    - DRONE=${DRONE}
+    {{ if (.ENABLE_ROLLBAR) "true"}}
+    - ROLLBAR={{.ROLLBAR_TOKEN}}
+    {{ end }}
+    {{ range .BUILD_ARGS }}
+    - {{.}}
+    {{ end }}
+  when:
+    ref:
+      include:
+      - refs/tags/*-beta*
+- name: Deploy-Container-${DRONE_TAG}
+  image: registry.integral-systems.ch/integral-systems/kubectl:v-1.0.0
+  settings:
+    mtu: 1450
+  environment:
+    TOKEN:
+      from_secret: TOKEN
+    SERVER:
+      from_secret: SERVER
+    USER:
+      from_secret: USER
+    CONTEXT: ich-cluster
+    DEPLOYMENT: {{.PROJECT_NAME}}
+    NAMESPACE: {{.NAMESPACE}}
+    CONTAINER: {{.CONTAINER_NAME}}
+    TAG: ${DRONE_TAG}
+    IMAGE: {{.BASE_IMAGE}}
+    USERNAME:
+      from_secret: docker_username
+    PASSWORD:
+      from_secret: docker_password
+  commands:
+  - deploy.sh
+  when:
+    ref:
+      include:
+      - refs/tags/*-beta*
+#############Notification###################
+{{ if (.ENABEL_TELEGRAM) "true" }}
+- name: Notify-via-Telegram
+  image: appleboy/drone-telegram
+  settings:
+    mtu: 1450
+    token:
+      from_secret: telegram_token
+    to: {{.TELEGRAM_TO |quote}}
+    message_file: .drone/telegram_beta.tpl
+  when:
+    status:
+    - failure
+    - success
+    ref:
+      include:
+      - refs/tags/*-beta*
+{{ end }}
+{{ if (.ENABLE_MAIL) "true" }}
+- name: Notify-via-Mail
+  image: drillster/drone-email
+  settings:
+    host: smtp.gmail.com
+    username:
+      from_secret: gmail_user
+    password:
+      from_secret: gmail_pass
+    from: admin@integralschweiz.org
+    recipients:
+    {{ range .MAIL_RECIPIENTS }}
+    - {{.}}
+    {{ end }}
+    recipients_only: {{.MAIL_RECIPIENTS_ONLY}}
+    when:
+      status: [ changed, failure, success ]
+      body: file:///drone/src/.drone/mail.hbs
+  when:
+    status:
+    - failure
+    - success
+    ref:
+      include:
+      - refs/tags/*-beta*
+{{ end }}
+{{ if (.ENABLE_ROLLBAR) "true" }}
+- name: Notify-Rollbar
+  image: plugins/webhook
+  settings:
+    mtu: 1450
+    urls: https://api.rollbar.com/api/1/deploy
+    headers:
+      - "X-Rollbar-Access-Token={{.ROLLBAR_TOKEN}}"
+    template: |
+      {
+        "environment": "production",
+        "revision": {{`"{{build.commit}}"`}},
+        "rollbar_username": {{`"{{build.author}}"`}},
+        "local_username": {{`"{{build.author}}"`}},
+        "comment": {{`"{{build.message}}"`}},
+        "status": "succeeded"
+      }
+  when:
+    status:
+    - success
+    ref:
+      include:
+      - refs/tags/*-beta*
+{{ end }}
+trigger:
+  event:
+  - tag
+
+node_selector:
+  pipeline: true

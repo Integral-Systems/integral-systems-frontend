@@ -1,0 +1,144 @@
+# kubetpl:syntax:go-template
+{{ if .HTTP_ERROR_HANDLING }}  
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-error-500
+  namespace: {{.NAMESPACE}}
+spec:
+  errors:
+    status:
+      - "500-599"
+    query: /500s.html
+    service:
+      name: eorrorhandler
+      port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-error-400
+  namespace: {{.NAMESPACE}}
+spec:
+  errors:
+    status:
+      - "400"
+    query: /400.html
+    service:
+      name: eorrorhandler
+      port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-error-401
+  namespace: {{.NAMESPACE}}
+spec:
+  errors:
+    status:
+      - "401"
+    query: /401.html
+    service:
+      name: eorrorhandler
+      port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-error-403
+  namespace: {{.NAMESPACE}}
+spec:
+  errors:
+    status:
+      - "403"
+    query: /403.html
+    service:
+      name: eorrorhandler
+      port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-error-40xs
+  namespace: {{.NAMESPACE}}
+spec:
+  errors:
+    status:
+      - "405-499"
+    query: /40xs.html
+    service:
+      name: eorrorhandler
+      port: 3000
+{{ end }}
+{{ if .FOR_O_FOR }}  
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-error-404
+  namespace: {{.NAMESPACE}}
+spec:
+  errors:
+    status:
+      - "404"
+    query: /404.html
+    service:
+      name: eorrorhandler
+      port: 3000
+{{ end }}
+{{ if .HTTPS_REDIRECT }}  
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-redirect
+  namespace: {{.NAMESPACE}}
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+{{ end }}
+{{ if .COMPRESS }}  
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-compress
+  namespace: {{.NAMESPACE}}
+spec:
+  compress: {}
+{{ end }}
+{{ if .WWW_REDIRECT }}  
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-redirectregex
+  namespace: {{.NAMESPACE}}
+spec:
+  redirectRegex:
+    regex: ^http://.*?[a-z].*/|^https://[^www][a-z].*/(.*)
+    replacement: https://www.{{.PRIMARY_DOMAIN}}/$1
+    permanent: true
+{{ end }}
+{{ if .BASIC_AUTH }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{.PROJECT_NAME}}-auth
+  namespace: {{.NAMESPACE}}
+spec:
+  basicAuth:
+    secret: {{.PROJECT_NAME}}-auth-secret
+---
+# htpasswd -nb user password | openssl base64
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{.PROJECT_NAME}}-auth-secret
+  namespace: {{.NAMESPACE}}
+data:
+  users: {{.BASIC_AUTH_STRING}}
+  {{ end }}

@@ -1,0 +1,22 @@
+# kubetpl:syntax:go-template
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: {{.PROJECT_NAME}}-cert
+  namespace: {{.NAMESPACE}}
+spec:
+  duration: 2160h # 90d
+  renewBefore: 1080h # 15d
+  keySize: 384
+  keyAlgorithm: ecdsa
+  commonName: {{ .PRIMARY_DOMAIN }}
+  secretName: {{ .PROJECT_NAME }}-cert
+  dnsNames:
+  {{ if .PRIMARY_DOMAIN }}- {{.PRIMARY_DOMAIN }} {{ end }}
+  {{ range .DOMAINS }}
+  - {{.}}
+  {{ end }}
+  issuerRef:
+    name: letsencrypt-http-prod
+    kind: ClusterIssuer

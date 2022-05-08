@@ -1,0 +1,41 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-ersterstck-website-tls
+  namespace: kulturverein-walzwerk
+spec:
+  entryPoints:
+  - web-secure
+  routes:
+  - kind: Rule
+    match: Host(`ersterstock.ch`)  || (Host(`www.ersterstock.ch`))
+    middlewares:
+    - name: ersterstck-website-compress
+    - name: ersterstck-website-redirectregex
+    priority: 10
+    services:
+    - name: ersterstck-website-service
+      port: 3000
+  tls:
+    secretName: ersterstck-website-cert
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-ersterstck-website
+  namespace: kulturverein-walzwerk
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`ersterstock.ch`)  || (Host(`www.ersterstock.ch`))
+    middlewares:
+    - name: ersterstck-website-compress
+    - name: ersterstck-website-redirect
+    - name: ersterstck-website-redirectregex
+    priority: 10
+    services:
+    - name: ersterstck-website-service
+      port: 3000

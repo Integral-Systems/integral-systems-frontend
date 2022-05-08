@@ -1,0 +1,41 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-hirefit-website-tls
+  namespace: hirefit-website
+spec:
+  entryPoints:
+  - web-secure
+  routes:
+  - kind: Rule
+    match: Host(`hirefit.ch`)  || (Host(`www.hirefit.ch`))
+    middlewares:
+    - name: hirefit-website-compress
+    - name: hirefit-website-redirectregex
+    priority: 1
+    services:
+    - name: hirefit-website-service
+      port: 3000
+  tls:
+    secretName: hirefit-website-cert
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-hirefit-website
+  namespace: hirefit-website
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`hirefit.ch`) || (Host(`www.hirefit.ch`))
+    middlewares:
+    - name: hirefit-website-compress
+    - name: hirefit-website-redirect
+    - name: hirefit-website-redirectregex
+    priority: 1
+    services:
+    - name: hirefit-website-service
+      port: 3000

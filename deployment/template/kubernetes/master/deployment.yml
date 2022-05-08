@@ -1,0 +1,139 @@
+# kubetpl:syntax:go-template
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.PROJECT_NAME}}
+  namespace: {{.NAMESPACE}}
+  labels:
+    app: {{.PROJECT_NAME}}
+    port: "{{.PORT}}"
+    {{ if .SENDMAIL}}sendmail: "enabled"{{ end }}
+    {{ if .TRAEFIK }}traefik: "enabled"{{ end }}
+    {{ if .APM }}apm: "enabled"{{ end }}
+    {{ range .DEPLOYMENT_LABELS }}
+    {{.NAME}}: {{.VALUE}}
+    {{ end }}
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 900
+  selector:
+    matchLabels:
+      app: {{.PROJECT_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{.PROJECT_NAME}}
+        port: "{{.PORT}}"
+        {{ if .SENDMAIL}}sendmail: "enabled"{{ end }}
+        {{ if .TRAEFIK }}traefik: "enabled"{{ end }}
+        {{ if .APM }}apm: "enabled"{{ end }}
+        {{ range .DEPLOYMENT_LABELS }}
+        {{.NAME}}: {{.VALUE}}
+        {{ end }}
+    spec:
+      securityContext:
+        runAsUser: 9988
+        runAsGroup: 777
+        fsGroup: 777
+        #fsGroupChangePolicy: "OnRootMismatch"
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: fx-docker-registry
+      containers:   
+      - name: {{.CONTAINER_NAME}}
+        image: {{.BASE_IMAGE}}:{{.TAG}}
+        imagePullPolicy: IfNotPresent
+        {{ if .ENABLE_CMD }}
+        command:
+          {{ range .CMDS}}
+          - {{.}}
+          {{ end }}
+        {{ end }}
+        env:
+        {{ range .ENV}}
+        - name: {{.ENV_NAME}}
+          {{if .ENV_VALUE}}
+          value: "{{.ENV_VALUE}}"
+          {{ end}}
+          {{if .ENV_SECRET_NAME }}
+          valueFrom:
+            secretKeyRef:
+              key: {{ .ENV_SECRET_KEY }}
+              name: {{ .ENV_SECRET_NAME }}
+          {{ end }}
+        {{ end }}       
+        ports:
+        - containerPort: {{.PORT}}
+        resources:
+          requests:
+            memory: {{.REQ_MEM | quote}}
+            cpu: {{.REQ_CPU | quote}}
+          limits:
+            memory: {{.LMT_MEM | quote}}
+            cpu: {{.LMT_CPU | quote}}
+        {{ if .MOUNTS }}
+        volumeMounts:
+         {{ range .VOLUME_MOUNTS}}
+          - mountPath: {{.MOUNT_PATH}}
+            name: {{.NAME}}
+          {{ end }}
+        {{ end }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{.PORT}}
+          initialDelaySeconds: 20
+          failureThreshold: 60
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{.PORT}}
+          initialDelaySeconds: 3
+          periodSeconds: 60
+        securityContext:
+          allowPrivilegeEscalation: false
+          {{ if or .DROP_CAPABILITIES .ADD_CAPABILITIES}}
+          capabilities:
+            {{if .DROP_CAPABILITIES}}
+            drop:
+            {{ range .DROP_CAPABILITIES}}
+            - {{.}}
+            {{end}}
+            {{end}}
+            {{if .ADD_CAPABILITIES}}
+            add:
+            {{ range .ADD_CAPABILITIES}}
+            - {{.}}
+            {{end}}
+            {{end}}
+        {{end}}
+          privileged: {{.PRIVILEGED}}
+          procMount: {{.PROCMOUNT}}
+          readOnlyRootFilesystem: {{.READONLYROOTFILESYSTEM}}
+          runAsNonRoot: {{.RUNASNONROOT}}
+      nodeSelector:
+        class: {{.SELECTOR}}
+      {{ if .MOUNTS }}
+      volumes:
+        {{ range .VOLUMES }}
+          - name: {{.NAME}} 
+            nfs:
+              server: {{.SERVER}} 
+              path: {{.PATH}}  
+        {{ end }}
+      {{ end }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{.PROJECT_NAME}}-service
+  namespace: {{.NAMESPACE}}
+spec:
+  selector:
+    app: {{.PROJECT_NAME}}
+  ports:
+  - protocol: TCP
+    port: {{.PORT}}
+    targetPort: {{.PORT}}

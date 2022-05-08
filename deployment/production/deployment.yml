@@ -1,0 +1,121 @@
+# kubetpl:syntax:$
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hirefit-website
+    component: cms
+    created-by: gradlon
+    instance: hirefit-website-production
+    managed-by: gradlon
+    part-of: hirefit-website
+    port: "3000"
+    role: backend
+    traefik: enabled
+    type: strapi
+    version: $TAG
+  name: hirefit-website
+  namespace: hirefit-website
+spec:
+  progressDeadlineSeconds: 900
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hirefit-website
+  template:
+    metadata:
+      labels:
+        app: hirefit-website
+        component: cms
+        created-by: gradlon
+        instance: hirefit-website-production
+        managed-by: gradlon
+        part-of: hirefit-website
+        port: "3000"
+        role: backend
+        traefik: enabled
+        type: strapi
+        version: $TAG
+    spec:
+      containers:
+      - command:
+        - node
+        - index.js
+        env:
+        - name: TZ
+          value: Europe/Zurich
+        - name: NODE_ENV
+          value: production
+        - name: EMAIL
+          value: info@hirefit.ch
+        - name: SMTPS
+          value: smtp.gmail.com
+        - name: SMTPP
+          value: "587"
+        - name: PSMTP
+          valueFrom:
+            secretKeyRef:
+              key: PSMTP
+              name: hirefit-website
+        - name: USMTP
+          valueFrom:
+            secretKeyRef:
+              key: USMTP
+              name: hirefit-website
+        image: registry.integral-systems.ch/integralworks/hirefit-website:$TAG
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 60
+        name: ersterstock-website
+        ports:
+        - containerPort: 3000
+        readinessProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 128m
+            memory: 1280Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          procMount: Default
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+      imagePullSecrets:
+      - name: fx-docker-registry
+      nodeSelector:
+        class: core
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 777
+        runAsGroup: 777
+        runAsUser: 9988
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hirefit-website-service
+  namespace: hirefit-website
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: hirefit-website

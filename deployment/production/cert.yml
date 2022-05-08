@@ -1,0 +1,19 @@
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: hirefit-website-cert
+  namespace: hirefit-website
+spec:
+  commonName: hirefit.ch
+  dnsNames:
+  - hirefit.ch
+  - www.hirefit.ch
+  duration: 2160h
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-http-prod
+  keyAlgorithm: ecdsa
+  keySize: 384
+  renewBefore: 1080h
+  secretName: hirefit-website-cert

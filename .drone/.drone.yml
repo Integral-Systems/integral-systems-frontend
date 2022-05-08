@@ -1,0 +1,151 @@
+---
+kind: pipeline
+name: Production-Build
+node_selector:
+  pipeline: true
+steps:
+- image: plugins/docker
+  name: Build-${DRONE_TAG}
+  settings:
+    build_args:
+    - TAG=${DRONE_TAG}
+    - DRONE=${DRONE}
+    - NODE_ENV=production
+    - URL=http://localhost:3000
+    - VITE_API_URL=https://api.hirefit.ch
+    mtu: 1450
+    password:
+      from_secret: docker_password
+    registry: registry.integral-systems.ch
+    repo: registry.integral-systems.ch/integralworks/hirefit-website
+    tags: ${DRONE_TAG}, latest
+    username:
+      from_secret: docker_username
+  when:
+    ref:
+      exclude:
+      - refs/tags/*-beta*
+      - refs/tags/*-rc*
+      include:
+      - refs/tags/*
+- image: appleboy/drone-telegram
+  name: Notify-via-Telegram
+  settings:
+    message_file: .drone/telegram_prod_build.tpl
+    mtu: 1450
+    to: "-495029427"
+    token:
+      from_secret: telegram_token
+  when:
+    ref:
+      exclude:
+      - refs/tags/*-beta*
+      - refs/tags/*-rc*
+      include:
+      - refs/tags/*
+    status:
+    - failure
+    - success
+- image: drillster/drone-email
+  name: Notify-via-Mail
+  settings:
+    from: admin@integralschweiz.org
+    host: smtp.gmail.com
+    password:
+      from_secret: gmail_pass
+    recipients:
+    - gradlon@integralschweiz.org
+    recipients_only: true
+    username:
+      from_secret: gmail_user
+    when:
+      body: file:///drone/src/.drone/mail.hbs
+      status:
+      - changed
+      - failure
+      - success
+  when:
+    ref:
+      exclude:
+      - refs/tags/*-beta*
+      - refs/tags/*-rc*
+      include:
+      - refs/tags/*
+    status:
+    - failure
+    - success
+trigger:
+  event:
+  - tag
+type: kubernetes
+---
+kind: pipeline
+name: Deploy-Production
+node_selector:
+  pipeline: true
+steps:
+- commands:
+  - deploy.sh
+  environment:
+    CONTAINER: ersterstock-website
+    CONTEXT: ich-cluster
+    DEPLOYMENT: hirefit-website
+    IMAGE: registry.integral-systems.ch/integralworks/hirefit-website
+    NAMESPACE: hirefit-website
+    PASSWORD:
+      from_secret: docker_password
+    SERVER:
+      from_secret: SERVER
+    TAG: ${DRONE_TAG}
+    TOKEN:
+      from_secret: TOKEN
+    USER:
+      from_secret: USER
+    USERNAME:
+      from_secret: docker_username
+  image: registry.integral-systems.ch/integral-systems/kubectl:v-1.0.0
+  name: Deploy-build-${DRONE_TAG}
+  settings:
+    mtu: 1450
+- image: appleboy/drone-telegram
+  name: Notify-via-Telegram
+  settings:
+    message_file: .drone/telegram_prod_deploy.tpl
+    mtu: 1450
+    to: "-495029427"
+    token:
+      from_secret: telegram_token
+  when:
+    status:
+    - failure
+    - success
+- image: drillster/drone-email
+  name: Notify-via-Mail
+  settings:
+    body: file:///drone/src/.drone/mail_prod_deploy.hbs
+    from: admin@integralschweiz.org
+    host: smtp.gmail.com
+    mtu: 1450
+    password:
+      from_secret: gmail_pass
+    recipients:
+    - gradlon@integralschweiz.org
+    recipients_only: true
+    username:
+      from_secret: gmail_user
+    when:
+      status:
+      - changed
+      - failure
+      - success
+  when:
+    status:
+    - failure
+    - success
+trigger:
+  event:
+  - promote
+  target:
+  - production
+type: kubernetes
+

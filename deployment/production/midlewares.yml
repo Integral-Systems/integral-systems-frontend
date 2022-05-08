@@ -1,0 +1,29 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: hirefit-website-redirect
+  namespace: hirefit-website
+spec:
+  redirectScheme:
+    permanent: true
+    scheme: https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: hirefit-website-compress
+  namespace: hirefit-website
+spec:
+  compress: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: hirefit-website-redirectregex
+  namespace: hirefit-website
+spec:
+  redirectRegex:
+    permanent: true
+    regex: ^http://.*?[a-z].*/|^https://[^www][a-z].*/(.*)
+    replacement: https://www.hirefit.ch/$1

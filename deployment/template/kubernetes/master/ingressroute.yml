@@ -1,0 +1,78 @@
+# kubetpl:syntax:go-template
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-{{.PROJECT_NAME}}-tls
+  namespace: {{.NAMESPACE}}
+spec:
+  entryPoints:
+    - web-secure
+  routes:
+  - match: {{ if .PRIMARY_DOMAIN }}Host(`{{.PRIMARY_DOMAIN}}`){{ end }} {{ range .DOMAINS }} || (Host(`{{.}}`)){{ end }}
+    kind: Rule
+    priority: 1
+    services:
+    - name: {{.PROJECT_NAME}}-service
+      port: {{.PORT}}
+    middlewares:
+      {{ if .COMPRESS }}  
+      - name: {{.PROJECT_NAME}}-compress
+      {{ end }}
+      {{ if .WWW_REDIRECT }}  
+      - name: {{.PROJECT_NAME}}-redirectregex
+      {{ end }}
+      {{ if .HTTP_ERROR_HANDLING }}  
+      - name: {{.PROJECT_NAME}}-error-500
+      - name: {{.PROJECT_NAME}}-error-400
+      - name: {{.PROJECT_NAME}}-error-401
+      - name: {{.PROJECT_NAME}}-error-403
+      - name: {{.PROJECT_NAME}}-error-40xs
+      {{ end }}
+      {{ if .FOR_O_FOR }}  
+      - name: {{.PROJECT_NAME}}-error-404
+      {{ end }}
+      {{ if .BASIC_AUTH }}
+      - name: {{.PROJECT_NAME}}-auth
+      {{ end }}
+  tls:
+    secretName: {{.PROJECT_NAME}}-cert
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-{{.PROJECT_NAME}}
+  namespace: {{.NAMESPACE}}
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: {{ if .PRIMARY_DOMAIN }}Host(`{{.PRIMARY_DOMAIN}}`){{ end }}{{ range .DOMAINS }} || (Host(`{{.}}`){{ end }})
+    kind: Rule
+    priority: 1
+    services:
+    - name: {{.PROJECT_NAME}}-service
+      port: {{.PORT}}
+    middlewares:
+      {{ if .COMPRESS }}  
+      - name: {{.PROJECT_NAME}}-compress
+      {{ end }}
+      {{ if .HTTPS_REDIRECT }}  
+      - name: {{.PROJECT_NAME}}-redirect
+      {{ end }}
+      {{ if .WWW_REDIRECT }}  
+      - name: {{.PROJECT_NAME}}-redirectregex
+      {{ end }}
+      {{ if .HTTP_ERROR_HANDLING }}  
+      - name: {{.PROJECT_NAME}}-error-500
+      - name: {{.PROJECT_NAME}}-error-400
+      - name: {{.PROJECT_NAME}}-error-401
+      - name: {{.PROJECT_NAME}}-error-403
+      - name: {{.PROJECT_NAME}}-error-40xs
+      {{ end }}
+      {{ if .FOR_O_FOR }}   
+      - name: {{.PROJECT_NAME}}-error-404
+      {{ end }}
+      {{ if .BASIC_AUTH }}
+      - name: {{.PROJECT_NAME}}-auth
+      {{ end }}

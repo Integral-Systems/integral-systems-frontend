@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#svelte, body, html {
+    height: 100%;
+    min-height: 100%;
+    scrollbar-color: #8C7EBF #3B1A77;
+}
+html {
+    scrollbar-color: #8C7EBF #3B1A77;
+}

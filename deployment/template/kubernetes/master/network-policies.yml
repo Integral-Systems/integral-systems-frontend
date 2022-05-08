@@ -1,0 +1,25 @@
+# kubetpl:syntax:go-template
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-traefik-port-{{.PORT}}
+  namespace: {{.NAMESPACE}}
+spec:
+  podSelector:
+    matchLabels:
+      traefik: enabled
+      port: "{{.PORT}}"
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          role: ingress
+      podSelector:
+        matchLabels:
+          role: traefik-ingress
+    ports:
+    - protocol: TCP
+      port: {{.PORT}}
+  policyTypes:
+  - Ingress

@@ -1,0 +1,219 @@
+{
+    "root": true,
+    "parserOptions": {
+        "parser": "babel-eslint",
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "noInlineConfig": false,
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "extends": [
+        "airbnb-base",
+        "prettier"
+    ],
+    "plugins": [
+        "prettier",
+        "compat"
+    ],
+    "globals": {
+        "ga": true, // Google Analytics
+        "gtag": true,
+        "grecaptcha": true,
+        "process": true,
+        "chrome": true,
+        "options": true,
+        "apos": true,
+        "$": true,
+        "_": true,
+        "WOW": true,
+        "CACHE_VERSIONS": true,
+        "ENVIRONMENT": true
+    },
+    // add your custom rules here
+    "rules": {
+        "prettier/prettier": [
+            "error"
+        ],
+        "no-param-reassign": "off",
+        "import/first": "off",
+        "import/named": "error",
+        "import/namespace": "error",
+        "import/default": "error",
+        "import/export": "error",
+        "import/extensions": "off",
+        "array-element-newline": [
+            "error",
+            "consistent"
+        ],
+        "import/no-unresolved": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/prefer-default-export": "off",
+        "prefer-promise-reject-errors": "off",
+        "prefer-const": "error",
+        "no-const-assign": "error",
+        "no-var": "error",
+        "no-unused-vars": [
+            "error",
+            {
+                "vars": "local",
+                "varsIgnorePattern": "(rollbar|apm)",
+                "argsIgnorePattern": "(options|self)"
+            }
+        ],
+        "no-shadow": [
+            "error",
+            {
+                "allow": [
+                    "options"
+                ]
+            }
+        ],
+        // INFO: Disabled Rules for Convienience
+        // curly: "off",
+        "max-len": "off",
+        "operator-linebreak": "off",
+        "lines-between-class-members": "off",
+        "no-plusplus": "off",
+        "no-await-in-loop": "off",
+        "func-names": "off",
+        "no-labels": "off",
+        "arrow-body-style": "off",
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "no-underscore-dangle": "off",
+        // "prefer-destructuring": "off",
+        // allow debugger during development only
+        "no-console": "off",
+        "no-debugger": "off"
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.ts",
+                "**/*.tsx"
+            ],
+            "env": {
+                "browser": true,
+                "es6": true,
+                "node": true
+            },
+            "extends": [
+                "airbnb-typescript",
+                "airbnb/hooks",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking",
+                "plugin:prettier/recommended",
+                "prettier/@typescript-eslint"
+            ],
+            "globals": {
+                "Atomics": "readonly",
+                "SharedArrayBuffer": "readonly"
+            },
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "ecmaFeatures": {
+                    "jsx": true
+                },
+                "ecmaVersion": 2018,
+                "sourceType": "module",
+                "project": "./tsconfig.json"
+            },
+            "plugins": [
+                "@typescript-eslint",
+                "prettier"
+            ],
+            "rules": {
+                "@typescript-eslint/no-unsafe-assignment": "off",
+                "compat/compat": "warn",
+                "prettier/prettier": [
+                    "error"
+                ],
+                "no-inline-comments": 1,
+                "no-param-reassign": "off",
+                "import/first": "off",
+                "import/named": "error",
+                "import/namespace": "error",
+                "import/default": "error",
+                "import/export": "error",
+                "import/extensions": "off",
+                "import/no-unresolved": "off",
+                "array-element-newline": [
+                    "error",
+                    "consistent"
+                ],
+                "import/no-extraneous-dependencies": "off",
+                "import/prefer-default-export": "off",
+                "prefer-promise-reject-errors": "off",
+                "prefer-const": "error",
+                "no-const-assign": "error",
+                "no-var": "error",
+                "no-shadow": [
+                    "error",
+                    {
+                        "allow": [
+                            "options"
+                        ]
+                    }
+                ],
+                "@typescript-eslint/no-shadow": [
+                    "error",
+                    {
+                        "allow": [
+                            "options"
+                        ]
+                    }
+                ],
+                "linebreak-style": [
+                    "error",
+                    "unix"
+                ],
+                "no-underscore-dangle": "off",
+                // "prefer-destructuring": "off",
+                "@typescript-eslint/no-explicit-any": 0,
+                "@typescript-eslint/indent": [
+                    "error",
+                    4
+                ],
+                "no-unused-vars": "off",
+                "@typescript-eslint/no-unused-vars": [
+                    "error",
+                    {
+                        "vars": "local",
+                        "varsIgnorePattern": "(rollbar|apm)",
+                        "argsIgnorePattern": "(options|self)"
+                    }
+                ],
+                // INFO: Disabled Rules for Convienience
+                // curly: "off",
+                "max-len": "off",
+                "operator-linebreak": "off",
+                "lines-between-class-members": "off",
+                "no-plusplus": "off",
+                "no-await-in-loop": "off",
+                "func-names": "off",
+                "no-labels": "off",
+                "arrow-body-style": "off",
+                // INFO: TS disabled Rules
+                "@typescript-eslint/no-unsafe-member-access": "off",
+                "@typescript-eslint/no-unsafe-call": "off",
+                // allow debugger during development only
+                "no-console": "off",
+                "no-debugger": "off"
+            },
+            "settings": {
+                "react": {
+                    "version": "999.999.999"
+                }
+            }
+        }
+    ]
+}
