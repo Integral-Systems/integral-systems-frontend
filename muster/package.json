@@ -24,6 +24,6 @@
   "dependencies": {
     "@lukeed/uuid": "^2.0.0",
     "cookie": "^0.4.1",
-    "marked": "^3.0.8"
+    "marked": "^4.0.10"
   }
 }
