@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: errorhandler
+  namespace: integral-systems
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: errorhandler
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

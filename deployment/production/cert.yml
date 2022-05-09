@@ -2,13 +2,15 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: hirefit-website-cert
-  namespace: hirefit-website
+  name: integral-systems-cert
+  namespace: integral-systems
 spec:
-  commonName: hirefit.ch
+  commonName: integral-systems.ch
   dnsNames:
-  - hirefit.ch
-  - www.hirefit.ch
+  - integral-systems.ch
+  - www.integral-systems.ch
+  - integral-design.ch
+  - www.integral-design.ch
   duration: 2160h
   issuerRef:
     kind: ClusterIssuer
@@ -16,4 +18,4 @@ spec:
   keyAlgorithm: ecdsa
   keySize: 384
   renewBefore: 1080h
-  secretName: hirefit-website-cert
+  secretName: integral-systems-cert

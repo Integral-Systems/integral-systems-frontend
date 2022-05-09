@@ -1,9 +1,9 @@
 # Project Base Settings
-NAMESPACE: "hirefit-website"
-PROJECT_NAME: "hirefit-website"
+NAMESPACE: "integral-systems"
+PROJECT_NAME: "integral-systems"
 NS_LABELS:
   - NAME: owner
-    VALUE: Integralworks
+    VALUE: Integral-Systems
   - NAME: managedb-by
     VALUE: gradlon
   - NAME: created-by
@@ -11,24 +11,24 @@ NS_LABELS:
 # Deploymnet Settings
 DEPLOYMENT_LABELS:
   - NAME: role
-    VALUE: backend
+    VALUE: frontend
   - NAME: type
-    VALUE: strapi
+    VALUE: node
   - NAME: instance
-    VALUE: hirefit-website-production
+    VALUE: integral-systems-frontend-production
   - NAME: version
     VALUE: $TAG
   - NAME: component
-    VALUE: cms
+    VALUE: frontend
   - NAME: part-of
-    VALUE: hirefit-website
+    VALUE: integral-systems-website
   - NAME: managed-by
     VALUE: gradlon
   - NAME: created-by
     VALUE: gradlon
 # Container Settings
-BASE_IMAGE: "registry.integral-systems.ch/integralworks/hirefit-website"
-CONTAINER_NAME: "ersterstock-website"
+BASE_IMAGE: "registry.integral-systems.ch/integral-systems/integral-systems-frontend"
+CONTAINER_NAME: "integral-systems-website"
 TAG: "latest"
 PORT: "3000"
 ENV:
@@ -38,28 +38,11 @@ ENV:
   - ENV_NAME: "NODE_ENV"
     ENV_SECRET_NAME: false
     ENV_VALUE: "production"
-  - ENV_NAME: "EMAIL"
-    ENV_SECRET_NAME: false
-    ENV_VALUE: "info@hirefit.ch"
-  - ENV_NAME: "SMTPS"
-    ENV_SECRET_NAME: false
-    ENV_VALUE: "smtp.gmail.com"
-  - ENV_NAME: "SMTPP"
-    ENV_SECRET_NAME: false
-    ENV_VALUE: 587
-  - ENV_NAME: "PSMTP"
-    ENV_SECRET_NAME: "hirefit-website"
-    ENV_SECRET_KEY: "PSMTP"
-    ENV_VALUE: false
-  - ENV_NAME: "USMTP"
-    ENV_SECRET_NAME: "hirefit-website"
-    ENV_SECRET_KEY: "USMTP"
-    ENV_VALUE: false
 MOUNTS: false
 VOLUMES:
   - NAME: uploads
     SERVER: ich-store.int.freshx.de
-    PATH: "/data/nfs/slow/projects/integralworks/hirefit/api.ersterstock.ch/strapi/uploads"
+    PATH: "/data/nfs/slow/projects/kulturverein-walzwerk/api.ersterstock.ch/strapi/uploads"
 VOLUME_MOUNTS:
   - NAME: uploads
     MOUNT_PATH: /data/app/public/uploads
@@ -70,7 +53,7 @@ CMDS:
 REQ_MEM: "50Mi"
 REQ_CPU: "50m"
 LMT_MEM: "1280Mi"
-LMT_CPU: "128m"
+LMT_CPU: "512m"
 HEALTH_CHECK_PATH: "/"
 # Labels
 TRAEFIK: true
@@ -93,7 +76,7 @@ E_MAIL: "gradlon@integral-systems.ch"
 SMTPP: ""
 SMTPS: ""
 SELECTOR: "core"
-URL: "https://www.hirefit.ch"
+URL: "https://integral-systems.ch"
 # Container Security
 PRIVILEGED: false
 PROCMOUNT: Default
@@ -105,9 +88,11 @@ ADD_CAPABILITIES:
 # Networks Policy
 SENDMAIL: false
 # Domains
-PRIMARY_DOMAIN: "hirefit.ch"
+PRIMARY_DOMAIN: "integral-systems.ch"
 DOMAINS:
-  - "www.hirefit.ch"
+  - "www.integral-systems.ch"
+  - "integral-design.ch"
+  - "www.integral-design.ch"
 # Pipeline Settings
 PROMOTE_TO_PROD: true
 PROMOTE_TO_STAGE: false
@@ -124,4 +109,4 @@ ENABLE_SUBMODULE: false
 BUILD_ARGS:
   - NODE_ENV=production
   - URL=http://localhost:3000
-  - VITE_API_URL=https://api.hirefit.ch
+  - VITE_API_URL=https://api.integral-systems.ch

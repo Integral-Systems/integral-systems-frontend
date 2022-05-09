@@ -2,40 +2,42 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: ingressroute-hirefit-website-tls
-  namespace: hirefit-website
+  name: ingressroute-integral-systems-tls
+  namespace: integral-systems
 spec:
   entryPoints:
   - web-secure
   routes:
   - kind: Rule
-    match: Host(`hirefit.ch`)  || (Host(`www.hirefit.ch`))
+    match: Host(`integral-systems.ch`)  || (Host(`www.integral-systems.ch`)) || (Host(`integral-design.ch`))
+      || (Host(`www.integral-design.ch`))
     middlewares:
-    - name: hirefit-website-compress
-    - name: hirefit-website-redirectregex
+    - name: integral-systems-compress
+    - name: integral-systems-redirectregex
     priority: 1
     services:
-    - name: hirefit-website-service
+    - name: integral-systems-service
       port: 3000
   tls:
-    secretName: hirefit-website-cert
+    secretName: integral-systems-cert
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: ingressroute-hirefit-website
-  namespace: hirefit-website
+  name: ingressroute-integral-systems
+  namespace: integral-systems
 spec:
   entryPoints:
   - web
   routes:
   - kind: Rule
-    match: Host(`hirefit.ch`) || (Host(`www.hirefit.ch`))
+    match: Host(`integral-systems.ch`) || (Host(`www.integral-systems.ch`) || (Host(`integral-design.ch`)
+      || (Host(`www.integral-design.ch`))
     middlewares:
-    - name: hirefit-website-compress
-    - name: hirefit-website-redirect
-    - name: hirefit-website-redirectregex
+    - name: integral-systems-compress
+    - name: integral-systems-redirect
+    - name: integral-systems-redirectregex
     priority: 1
     services:
-    - name: hirefit-website-service
+    - name: integral-systems-service
       port: 3000

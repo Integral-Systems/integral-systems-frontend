@@ -12,12 +12,12 @@ steps:
     - DRONE=${DRONE}
     - NODE_ENV=production
     - URL=http://localhost:3000
-    - VITE_API_URL=https://api.hirefit.ch
+    - VITE_API_URL=https://api.integral-systems.ch
     mtu: 1450
     password:
       from_secret: docker_password
     registry: registry.integral-systems.ch
-    repo: registry.integral-systems.ch/integralworks/hirefit-website
+    repo: registry.integral-systems.ch/integral-systems/integral-systems-frontend
     tags: ${DRONE_TAG}, latest
     username:
       from_secret: docker_username
@@ -87,11 +87,11 @@ steps:
 - commands:
   - deploy.sh
   environment:
-    CONTAINER: ersterstock-website
+    CONTAINER: integral-systems-website
     CONTEXT: ich-cluster
-    DEPLOYMENT: hirefit-website
-    IMAGE: registry.integral-systems.ch/integralworks/hirefit-website
-    NAMESPACE: hirefit-website
+    DEPLOYMENT: integral-systems
+    IMAGE: registry.integral-systems.ch/integral-systems/integral-systems-frontend
+    NAMESPACE: integral-systems
     PASSWORD:
       from_secret: docker_password
     SERVER:

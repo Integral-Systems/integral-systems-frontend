@@ -2,8 +2,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: hirefit-website-redirect
-  namespace: hirefit-website
+  name: integral-systems-redirect
+  namespace: integral-systems
 spec:
   redirectScheme:
     permanent: true
@@ -12,18 +12,18 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: hirefit-website-compress
-  namespace: hirefit-website
+  name: integral-systems-compress
+  namespace: integral-systems
 spec:
   compress: {}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: hirefit-website-redirectregex
-  namespace: hirefit-website
+  name: integral-systems-redirectregex
+  namespace: integral-systems
 spec:
   redirectRegex:
     permanent: true
     regex: ^http://.*?[a-z].*/|^https://[^www][a-z].*/(.*)
-    replacement: https://www.hirefit.ch/$1
+    replacement: https://www.integral-systems.ch/$1

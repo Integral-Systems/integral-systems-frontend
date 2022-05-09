@@ -12,7 +12,7 @@ spec:
       - "500-599"
     query: /500s.html
     service:
-      name: eorrorhandler
+      name: errorhandler
       port: 3000
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -26,7 +26,7 @@ spec:
       - "400"
     query: /400.html
     service:
-      name: eorrorhandler
+      name: errorhandler
       port: 3000
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -40,7 +40,7 @@ spec:
       - "401"
     query: /401.html
     service:
-      name: eorrorhandler
+      name: errorhandler
       port: 3000
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -54,7 +54,7 @@ spec:
       - "403"
     query: /403.html
     service:
-      name: eorrorhandler
+      name: errorhandler
       port: 3000
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -68,7 +68,7 @@ spec:
       - "405-499"
     query: /40xs.html
     service:
-      name: eorrorhandler
+      name: errorhandler
       port: 3000
 {{ end }}
 {{ if .FOR_O_FOR }}  
@@ -84,7 +84,7 @@ spec:
       - "404"
     query: /404.html
     service:
-      name: eorrorhandler
+      name: errorhandler
       port: 3000
 {{ end }}
 {{ if .HTTPS_REDIRECT }}  

@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-traefik-port-3000
-  namespace: hirefit-website
+  namespace: integral-systems
 spec:
   ingress:
   - from:
