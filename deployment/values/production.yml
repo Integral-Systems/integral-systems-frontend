@@ -3,7 +3,7 @@ NAMESPACE: "integral-systems"
 PROJECT_NAME: "integral-systems"
 NS_LABELS:
   - NAME: owner
-    VALUE: Integral-Systems
+    VALUE: integral-systems
   - NAME: managedb-by
     VALUE: gradlon
   - NAME: created-by
@@ -28,7 +28,7 @@ DEPLOYMENT_LABELS:
     VALUE: gradlon
 # Container Settings
 BASE_IMAGE: "registry.integral-systems.ch/integral-systems/integral-systems-frontend"
-CONTAINER_NAME: "integral-systems-website"
+CONTAINER_NAME: "integral-systems-website-fronted"
 TAG: "latest"
 PORT: "3000"
 ENV:
@@ -38,6 +38,14 @@ ENV:
   - ENV_NAME: "NODE_ENV"
     ENV_SECRET_NAME: false
     ENV_VALUE: "production"
+  - ENV_NAME: "PSMTP"
+    ENV_SECRET_NAME: "integral-systems-website-frontend"
+    ENV_SECRET_KEY: "PSMTP"
+    ENV_VALUE: false
+  - ENV_NAME: "USMTP"
+    ENV_SECRET_NAME: "integral-systems-website-frontend"
+    ENV_SECRET_KEY: "USMTP"
+    ENV_VALUE: false
 MOUNTS: false
 VOLUMES:
   - NAME: uploads

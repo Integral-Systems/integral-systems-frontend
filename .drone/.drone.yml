@@ -87,7 +87,7 @@ steps:
 - commands:
   - deploy.sh
   environment:
-    CONTAINER: integral-systems-website
+    CONTAINER: integral-systems-website-fronted
     CONTEXT: ich-cluster
     DEPLOYMENT: integral-systems
     IMAGE: registry.integral-systems.ch/integral-systems/integral-systems-frontend

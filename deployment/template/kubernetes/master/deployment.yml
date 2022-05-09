@@ -42,7 +42,7 @@ spec:
         - name: fx-docker-registry
       containers:   
       - name: {{.CONTAINER_NAME}}
-        image: {{.BASE_IMAGE}}:{{.TAG}}
+        image: {{.BASE_IMAGE}}:$TAG
         imagePullPolicy: IfNotPresent
         {{ if .ENABLE_CMD }}
         command:

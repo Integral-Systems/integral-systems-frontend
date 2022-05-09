@@ -47,7 +47,17 @@ spec:
           value: Europe/Zurich
         - name: NODE_ENV
           value: production
-        image: registry.integral-systems.ch/integral-systems/integral-systems-frontend:latest
+        - name: PSMTP
+          valueFrom:
+            secretKeyRef:
+              key: PSMTP
+              name: integral-systems-website-frontend
+        - name: USMTP
+          valueFrom:
+            secretKeyRef:
+              key: USMTP
+              name: integral-systems-website-frontend
+        image: registry.integral-systems.ch/integral-systems/integral-systems-frontend:$TAG
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -55,7 +65,7 @@ spec:
             port: 3000
           initialDelaySeconds: 3
           periodSeconds: 60
-        name: integral-systems-website
+        name: integral-systems-website-fronted
         ports:
         - containerPort: 3000
         readinessProbe:
