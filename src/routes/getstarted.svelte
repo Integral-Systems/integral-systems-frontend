@@ -1,7 +1,8 @@
 <script>
+    import { assets } from '$app/paths';
     import Hero from "$lib/components/Hero.svelte";
     import GetstartedForm from "$lib/components/GetstartedForm.svelte";
-import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
+    import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
 
     const heroOptions = {
         type: 'heading',
@@ -21,10 +22,10 @@ import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
 <div class="overflow-x-auto">
     <div class="pb-8 pt-10 bg-white mt-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <a class="link link-secondary" rel="external" href="https://integral-systems.ch//files/agent.exe" >Windows Agent</a>
+            <a class="link link-secondary" href="{`${assets}/support/agent.exe`}" rel="external">Windows Agent</a>
         </div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <a class="link link-secondary" rel="external" href="https://integral-systems.ch//files/agent.mpkg">Mac Agent</a>
+            <a class="link link-secondary" href="{`${assets}/support/agent.mpkg.zip`}" rel="external">Mac Agent</a>
         </div>
     </div>
 </div>
