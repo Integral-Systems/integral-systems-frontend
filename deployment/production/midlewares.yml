@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: integral-systems-redirect
+  name: integral-systems-website-frontend-redirect
   namespace: integral-systems
 spec:
   redirectScheme:
@@ -12,7 +12,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: integral-systems-compress
+  name: integral-systems-website-frontend-compress
   namespace: integral-systems
 spec:
   compress: {}
@@ -20,7 +20,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: integral-systems-redirectregex
+  name: integral-systems-website-frontend-redirectregex
   namespace: integral-systems
 spec:
   redirectRegex:

@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: integral-systems-cert
+  name: integral-systems-website-frontend-cert
   namespace: integral-systems
 spec:
   commonName: integral-systems.ch
@@ -18,4 +18,4 @@ spec:
   keyAlgorithm: ecdsa
   keySize: 384
   renewBefore: 1080h
-  secretName: integral-systems-cert
+  secretName: integral-systems-website-frontend-cert

@@ -29,7 +29,7 @@ DEPLOYMENT_LABELS:
 # Container Settings
 BASE_IMAGE: "registry.integral-systems.ch/integral-systems/integral-systems-frontend"
 CONTAINER_NAME: "integral-systems-website-fronted"
-TAG: "latest"
+TAG: "0.0.2"
 PORT: "3000"
 ENV:
   - ENV_NAME: "TZ"

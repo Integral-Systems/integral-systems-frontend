@@ -1,6 +1,6 @@
 # Project Base Settings
 NAMESPACE: "integral-systems"
-PROJECT_NAME: "integral-systems"
+PROJECT_NAME: "integral-systems-website-frontend"
 NS_LABELS:
   - NAME: owner
     VALUE: integral-systems

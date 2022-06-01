@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: integral-systems
+    app: integral-systems-website-frontend
     component: frontend
     created-by: gradlon
     instance: integral-systems-frontend-production
@@ -15,18 +15,18 @@ metadata:
     traefik: enabled
     type: node
     version: $TAG
-  name: integral-systems
+  name: integral-systems-website-frontend
   namespace: integral-systems
 spec:
   progressDeadlineSeconds: 900
   replicas: 1
   selector:
     matchLabels:
-      app: integral-systems
+      app: integral-systems-website-frontend
   template:
     metadata:
       labels:
-        app: integral-systems
+        app: integral-systems-website-frontend
         component: frontend
         created-by: gradlon
         instance: integral-systems-frontend-production
@@ -104,7 +104,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: integral-systems-service
+  name: integral-systems-website-frontend-service
   namespace: integral-systems
 spec:
   ports:
@@ -112,4 +112,4 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    app: integral-systems
+    app: integral-systems-website-frontend
