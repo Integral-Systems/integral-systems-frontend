@@ -1,6 +1,6 @@
 # Project Base Settings
 NAMESPACE: "integral-systems"
-PROJECT_NAME: "integral-systems"
+PROJECT_NAME: "integral-systems-website-frontend"
 NS_LABELS:
   - NAME: owner
     VALUE: integral-systems
@@ -29,7 +29,7 @@ DEPLOYMENT_LABELS:
 # Container Settings
 BASE_IMAGE: "registry.integral-systems.ch/integral-systems/integral-systems-frontend"
 CONTAINER_NAME: "integral-systems-website-fronted"
-TAG: "0.0.2"
+TAG: "latest"
 PORT: "3000"
 ENV:
   - ENV_NAME: "TZ"

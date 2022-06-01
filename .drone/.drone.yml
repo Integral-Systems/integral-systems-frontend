@@ -89,7 +89,7 @@ steps:
   environment:
     CONTAINER: integral-systems-website-fronted
     CONTEXT: ich-cluster
-    DEPLOYMENT: integral-systems
+    DEPLOYMENT: integral-systems-website-frontend
     IMAGE: registry.integral-systems.ch/integral-systems/integral-systems-frontend
     NAMESPACE: integral-systems
     PASSWORD:
