@@ -47,7 +47,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: {{ if .PRIMARY_DOMAIN }}Host(`{{.PRIMARY_DOMAIN}}`){{ end }}{{ range .DOMAINS }} || (Host(`{{.}}`){{ end }})
+  - match: {{ if .PRIMARY_DOMAIN }}Host(`{{.PRIMARY_DOMAIN}}`){{ end }} {{ range .DOMAINS }} || (Host(`{{.}}`)){{ end }}
     kind: Rule
     priority: 1
     services:

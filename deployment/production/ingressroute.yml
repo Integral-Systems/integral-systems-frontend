@@ -31,7 +31,7 @@ spec:
   - web
   routes:
   - kind: Rule
-    match: Host(`integral-systems.ch`) || (Host(`www.integral-systems.ch`) || (Host(`integral-design.ch`)
+    match: Host(`integral-systems.ch`)  || (Host(`www.integral-systems.ch`)) || (Host(`integral-design.ch`))
       || (Host(`www.integral-design.ch`))
     middlewares:
     - name: integral-systems-website-frontend-compress
