@@ -54,10 +54,10 @@ VOLUMES:
 VOLUME_MOUNTS:
   - NAME: uploads
     MOUNT_PATH: /data/app/public/uploads
-ENABLE_CMD: true
 CMDS: 
  - "node"
  - "index.js"
+ARGS:
 REQ_MEM: "50Mi"
 REQ_CPU: "50m"
 LMT_MEM: "1280Mi"

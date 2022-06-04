@@ -14,7 +14,7 @@ metadata:
     role: frontend
     traefik: enabled
     type: node
-    version: $TAG
+    version: "$TAG"
   name: integral-systems-website-frontend
   namespace: integral-systems
 spec:
@@ -36,7 +36,7 @@ spec:
         role: frontend
         traefik: enabled
         type: node
-        version: $TAG
+        version: "$TAG"
     spec:
       containers:
       - command:

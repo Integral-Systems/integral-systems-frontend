@@ -70,6 +70,9 @@ cp -f $ENVFILE $OUTPUT/../values/
 mkdir -p $OUTPUT/../template/kubernetes/
 cp -R $SOURCE $OUTPUT/../template/kubernetes/
 
+find $OUTPUT/ -type f -name "*.yml" -exec sed -i'' -e 's/version: $TAG/version: "$TAG"/g' {} +
+find $OUTPUT/ -type f -name '*.yml-e' -delete
+
 echo "# kubetpl:syntax:$"|cat - $OUTPUT/deployment.yml > /tmp/out && mv /tmp/out $OUTPUT/deployment.yml
 
 echo finished

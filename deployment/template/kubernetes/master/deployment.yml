@@ -44,9 +44,15 @@ spec:
       - name: {{.CONTAINER_NAME}}
         image: {{.BASE_IMAGE}}:$TAG
         imagePullPolicy: IfNotPresent
-        {{ if .ENABLE_CMD }}
+        {{ if .CMDS }}
         command:
           {{ range .CMDS}}
+          - {{.}}
+          {{ end }}
+        {{ end }}
+        {{ if .ARGS }}
+        args:
+          {{ range .ARGS}}
           - {{.}}
           {{ end }}
         {{ end }}
@@ -81,14 +87,14 @@ spec:
         {{ end }}
         readinessProbe:
           httpGet:
-            path: /
+            path: {{.HEALTH_CHECK_PATH}}
             port: {{.PORT}}
           initialDelaySeconds: 20
           failureThreshold: 60
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /
+            path: {{.HEALTH_CHECK_PATH}}
             port: {{.PORT}}
           initialDelaySeconds: 3
           periodSeconds: 60
